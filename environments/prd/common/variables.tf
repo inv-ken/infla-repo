@@ -7,5 +7,5 @@ variable "pjname" {
 variable "envname" {
   type        = string
   default     = "prd"
-  description = "環境名"
+  description = "環境名。"
 }
