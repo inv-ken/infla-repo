@@ -2,10 +2,10 @@
 variable "pjname" {
   type        = string
   default     = "inv"
-  description = "プロジェクト名。"
+  description = "プロジェクト名"
 }
 variable "envname" {
   type        = string
   default     = "prd"
-  description = "環境名。"
+  description = "環境名"
 }
