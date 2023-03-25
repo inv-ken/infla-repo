@@ -2,7 +2,7 @@
 variable "pjname" {
   type        = string
   default     = "inv"
-  description = "プロジェクト名"
+  description = "プロジェクト名。"
 }
 variable "envname" {
   type        = string
