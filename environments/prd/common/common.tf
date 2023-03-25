@@ -8,8 +8,7 @@ module "log-storage-bucket" {
   server_side_encryption_configuration = {
     rule = {
       apply_server_side_encryption_by_default = {
-        kms_master_key_id = aws_kms_key.kms-key-log.arn
-        sse_algorithm     = "aws:kms"
+        sse_algorithm     = "AES256"
       }
     }
   }
@@ -53,141 +52,141 @@ module "log-storage-bucket" {
   ]
 }
 
-resource "aws_s3_bucket_policy" "log-storage-bucket-policy" {
-  bucket = module.log-storage-bucket.s3_bucket_id
-  policy = <<POLICY
-    {
-      "Version": "2012-10-17",
-      "Statement": [
-          {
-              "Sid": "AWSCloudTrailAclCheck20150319",
-              "Effect": "Allow",
-              "Principal": {
-                 "Service": "cloudtrail.amazonaws.com"
-              },
-              "Action": "s3:GetBucketAcl",
-              "Resource": "arn:aws:s3:::${var.pjname}-${var.envname}-s3-log-storage"
-          },
-          {
-              "Sid": "AWSCloudTrailWrite20150319",
-              "Effect": "Allow",
-              "Principal": {
-                "Service": "cloudtrail.amazonaws.com"
-              },
-              "Action": "s3:PutObject",
-              "Resource": "arn:aws:s3:::${var.pjname}-${var.envname}-s3-log-storage/AWSLogs/${data.aws_caller_identity.current.account_id}/*",
-              "Condition": {
-                  "StringEquals": {
-                      "s3:x-amz-acl": "bucket-owner-full-control",
-                      "AWS:SourceArn": [ "arn:aws:cloudtrail:ap-northeast-1:${data.aws_caller_identity.current.account_id}:trail/${var.pjname}-${var.envname}-cloud-trail",
-                                         "arn:aws:cloudtrail:us-east-1:${data.aws_caller_identity.current.account_id}:trail/${var.pjname}-${var.envname}-cloud-trail"]
-                  }
-              }
-          },
-          {
-        			"Sid": "AllowGuardDutygetBucketLocation",
-        			"Effect": "Allow",
-        			"Principal": {
-        				"Service": [
-        				  "guardduty.ap-northeast-1.amazonaws.com",
-        				  "guardduty.us-east-1.amazonaws.com"
-        				]
-        			},
-        			"Action": "s3:GetBucketLocation",
-        			"Resource": "arn:aws:s3:::mc-prd-s3-log-storage",
-        			"Condition": {
-        				"StringEquals": {
-        					"aws:SourceAccount": "${data.aws_caller_identity.current.account_id}",
-        					"aws:SourceArn": [ 
-        					  "arn:aws:guardduty:ap-northeast-1:${data.aws_caller_identity.current.account_id}:detector/${aws_guardduty_detector.tokyo-detector.id}",
-        					  "arn:aws:guardduty:us-east-1:${data.aws_caller_identity.current.account_id}:detector/${aws_guardduty_detector.virginia-detector.id}"
-        					]
-        				}
-        			}
-        		},
-        		{
-        			"Sid": "AllowGuardDutyPutObject",
-        			"Effect": "Allow",
-        			"Principal": {
-        				"Service": [
-        				  "guardduty.ap-northeast-1.amazonaws.com",
-        				  "guardduty.us-east-1.amazonaws.com"
-        				]
-        			},
-        			"Action": "s3:PutObject",
-        			"Resource": "arn:aws:s3:::mc-prd-s3-log-storage/*",
-        			"Condition": {
-        				"StringEquals": {
-        					"aws:SourceAccount": "${data.aws_caller_identity.current.account_id}",
-        					"aws:SourceArn": [ 
-        					  "arn:aws:guardduty:ap-northeast-1:${data.aws_caller_identity.current.account_id}:detector/${aws_guardduty_detector.tokyo-detector.id}",
-        					  "arn:aws:guardduty:us-east-1:${data.aws_caller_identity.current.account_id}:detector/${aws_guardduty_detector.virginia-detector.id}"
-        					]
-        				}
-        			}
-        		},
-        		{
-        			"Sid": "AWSConfigBucketPermissionsCheck",
-        			"Effect": "Allow",
-        			"Principal": {
-        				"Service": "config.amazonaws.com"
-        			},
-        			"Action": "s3:GetBucketAcl",
-        			"Resource": "arn:aws:s3:::${var.pjname}-${var.envname}-s3-log-storage"
-        		},
-        		{
-        			"Sid": "AWSConfigBucketExistenceCheck",
-        			"Effect": "Allow",
-        			"Principal": {
-        				"Service": "config.amazonaws.com"
-        			},
-        			"Action": "s3:ListBucket",
-        			"Resource": "arn:aws:s3:::${var.pjname}-${var.envname}-s3-log-storage"
-        		},
-        		{
-        			"Sid": "AWSConfigBucketDelivery",
-        			"Effect": "Allow",
-        			"Principal": {
-        				"Service": "config.amazonaws.com"
-        			},
-        			"Action": "s3:PutObject",
-        			"Resource": "arn:aws:s3:::${var.pjname}-${var.envname}-s3-log-storage/AWSLogs/${data.aws_caller_identity.current.account_id}/Config/*",
-        			"Condition": {
-        				"StringEquals": {
-        					"s3:x-amz-acl": "bucket-owner-full-control"
-        				}
-        			}
-        		}
-      ]
-    }
-    POLICY
-}
+# resource "2aws_s3_bucket_policy" "log-storage-bucket-policy" {
+#   bucket = module.log-storage-bucket.s3_bucket_id
+#   policy = <<POLICY
+#     {
+#       "Version": "2012-10-17",
+#       "Statement": [
+#           {
+#               "Sid": "AWSCloudTrailAclCheck20150319",
+#               "Effect": "Allow",
+#               "Principal": {
+#                  "Service": "cloudtrail.amazonaws.com"
+#               },
+#               "Action": "s3:GetBucketAcl",
+#               "Resource": "arn:aws:s3:::${var.pjname}-${var.envname}-s3-log-storage"
+#           },
+#           {
+#               "Sid": "AWSCloudTrailWrite20150319",
+#               "Effect": "Allow",
+#               "Principal": {
+#                 "Service": "cloudtrail.amazonaws.com"
+#               },
+#               "Action": "s3:PutObject",
+#               "Resource": "arn:aws:s3:::${var.pjname}-${var.envname}-s3-log-storage/AWSLogs/${data.aws_caller_identity.current.account_id}/*",
+#               "Condition": {
+#                   "StringEquals": {
+#                       "s3:x-amz-acl": "bucket-owner-full-control",
+#                       "AWS:SourceArn": [ "arn:aws:cloudtrail:ap-northeast-1:${data.aws_caller_identity.current.account_id}:trail/${var.pjname}-${var.envname}-cloud-trail",
+#                                          "arn:aws:cloudtrail:us-east-1:${data.aws_caller_identity.current.account_id}:trail/${var.pjname}-${var.envname}-cloud-trail"]
+#                   }
+#               }
+#           },
+#           {
+#         			"Sid": "AllowGuardDutygetBucketLocation",
+#         			"Effect": "Allow",
+#         			"Principal": {
+#         				"Service": [
+#         				  "guardduty.ap-northeast-1.amazonaws.com",
+#         				  "guardduty.us-east-1.amazonaws.com"
+#         				]
+#         			},
+#         			"Action": "s3:GetBucketLocation",
+#         			"Resource": "arn:aws:s3:::mc-prd-s3-log-storage",
+#         			"Condition": {
+#         				"StringEquals": {
+#         					"aws:SourceAccount": "${data.aws_caller_identity.current.account_id}",
+#         					"aws:SourceArn": [ 
+#         					  "arn:aws:guardduty:ap-northeast-1:${data.aws_caller_identity.current.account_id}:detector/${aws_guardduty_detector.tokyo-detector.id}",
+#         					  "arn:aws:guardduty:us-east-1:${data.aws_caller_identity.current.account_id}:detector/${aws_guardduty_detector.virginia-detector.id}"
+#         					]
+#         				}
+#         			}
+#         		},
+#         		{
+#         			"Sid": "AllowGuardDutyPutObject",
+#         			"Effect": "Allow",
+#         			"Principal": {
+#         				"Service": [
+#         				  "guardduty.ap-northeast-1.amazonaws.com",
+#         				  "guardduty.us-east-1.amazonaws.com"
+#         				]
+#         			},
+#         			"Action": "s3:PutObject",
+#         			"Resource": "arn:aws:s3:::mc-prd-s3-log-storage/*",
+#         			"Condition": {
+#         				"StringEquals": {
+#         					"aws:SourceAccount": "${data.aws_caller_identity.current.account_id}",
+#         					"aws:SourceArn": [ 
+#         					  "arn:aws:guardduty:ap-northeast-1:${data.aws_caller_identity.current.account_id}:detector/${aws_guardduty_detector.tokyo-detector.id}",
+#         					  "arn:aws:guardduty:us-east-1:${data.aws_caller_identity.current.account_id}:detector/${aws_guardduty_detector.virginia-detector.id}"
+#         					]
+#         				}
+#         			}
+#         		},
+#         		{
+#         			"Sid": "AWSConfigBucketPermissionsCheck",
+#         			"Effect": "Allow",
+#         			"Principal": {
+#         				"Service": "config.amazonaws.com"
+#         			},
+#         			"Action": "s3:GetBucketAcl",
+#         			"Resource": "arn:aws:s3:::${var.pjname}-${var.envname}-s3-log-storage"
+#         		},
+#         		{
+#         			"Sid": "AWSConfigBucketExistenceCheck",
+#         			"Effect": "Allow",
+#         			"Principal": {
+#         				"Service": "config.amazonaws.com"
+#         			},
+#         			"Action": "s3:ListBucket",
+#         			"Resource": "arn:aws:s3:::${var.pjname}-${var.envname}-s3-log-storage"
+#         		},
+#         		{
+#         			"Sid": "AWSConfigBucketDelivery",
+#         			"Effect": "Allow",
+#         			"Principal": {
+#         				"Service": "config.amazonaws.com"
+#         			},
+#         			"Action": "s3:PutObject",
+#         			"Resource": "arn:aws:s3:::${var.pjname}-${var.envname}-s3-log-storage/AWSLogs/${data.aws_caller_identity.current.account_id}/Config/*",
+#         			"Condition": {
+#         				"StringEquals": {
+#         					"s3:x-amz-acl": "bucket-owner-full-control"
+#         				}
+#         			}
+#         		}
+#       ]
+#     }
+#     POLICY
+# }
 
 # ap-northeas-1のCloudtrailの設定
-resource "aws_cloudtrail" "cloudtrail" {
-  name                          = "${var.pjname}-${var.envname}-cloud-trail"
-  s3_bucket_name                = module.log-storage-bucket.s3_bucket_id
-  include_global_service_events = false
-  enable_log_file_validation    = true
+# resource "aws_cloudtrail" "cloudtrail" {
+#   name                          = "${var.pjname}-${var.envname}-cloud-trail"
+#   s3_bucket_name                = module.log-storage-bucket.s3_bucket_id
+#   include_global_service_events = false
+#   enable_log_file_validation    = true
 
-  advanced_event_selector {
-    field_selector {
-      equals = ["AWS::S3::Object"]
-      field  = "resources.type"
-    }
-    field_selector {
-      equals = ["Data"]
-      field  = "eventCategory"
-    }
-  }
+#   advanced_event_selector {
+#     field_selector {
+#       equals = ["AWS::S3::Object"]
+#       field  = "resources.type"
+#     }
+#     field_selector {
+#       equals = ["Data"]
+#       field  = "eventCategory"
+#     }
+#   }
 
-  advanced_event_selector {
-    field_selector {
-      equals = ["Management"]
-      field  = "eventCategory"
-    }
-  }
-}
+#   advanced_event_selector {
+#     field_selector {
+#       equals = ["Management"]
+#       field  = "eventCategory"
+#     }
+#   }
+# }
 
 # # us-east-1のCloudtrailの設定
 # resource "aws_cloudtrail" "cloudtrail-virginia" {
