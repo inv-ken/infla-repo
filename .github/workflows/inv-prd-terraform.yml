@@ -23,7 +23,7 @@ jobs:
     strategy:
       matrix:
         dir: [
-          environments/prd/common,
+          # environments/prd/common,
           # environments/prd/api,
           environments/prd/portal,
         ]
