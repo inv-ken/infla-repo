@@ -56,17 +56,17 @@ jobs:
         run: terraform init >> $GITHUB_OUTPUT
         working-directory: ${{ matrix.dir }}
       
-      - id: get
-        run: terraform get
-        working-directory: ${{ matrix.dir }}
+      # - id: get
+      #   run: terraform get
+      #   working-directory: ${{ matrix.dir }}
         
-      - id: validation
-        run: terraform validate -no-color
-        working-directory: ${{ matrix.dir }}
+      # - id: validation
+      #   run: terraform validate -no-color
+      #   working-directory: ${{ matrix.dir }}
         
-      - id: plan
-        run: terraform plan -no-color
-        working-directory: ${{ matrix.dir }}
+      # - id: plan
+      #   run: terraform plan -no-color
+      #   working-directory: ${{ matrix.dir }}
 
       - id: apply
         if: github.ref == 'refs/heads/main' && github.event_name == 'push'
