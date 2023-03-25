@@ -30,7 +30,7 @@ module "log-storage-bucket" {
 
   lifecycle_rule = [
     {
-      abort_incomplete_multipart_upload_days = 0
+      abort_incomplete_multipart_upload_days = 1
       enabled                                = true
       id                                     = "${var.pjname}-${var.envname}-s3-log-storage-lifecycle"
       tags = {
