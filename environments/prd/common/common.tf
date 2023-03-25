@@ -270,26 +270,26 @@ module "accesslog-bucket" {
   ]
 }
 
-# resource "aws_s3_bucket_policy" "accesslog-bucket-policy" {
-#   bucket = module.accesslog-bucket.s3_bucket_id
-#   policy = <<POLICY
-#     {
-#       "Version": "2012-10-17",
-#       "Id": "S3-Console-Auto-Gen-Policy-1645753762707",
-#       "Statement": [
-#         {
-#           "Sid": "S3PolicyStmt-DO-NOT-MODIFY-1645753762508",
-#           "Effect": "Allow",
-#           "Principal": {
-#             "Service": "logging.s3.amazonaws.com"
-#           },
-#           "Action": "s3:PutObject",
-#           "Resource": "${module.accesslog-bucket.s3_bucket_arn}/*"
-#         }
-#       ]
-#     }
-#     POLICY
-# }
+resource "aws_s3_bucket_policy" "accesslog-bucket-policy" {
+  bucket = module.accesslog-bucket.s3_bucket_id
+  policy = <<POLICY
+    {
+      "Version": "2012-10-17",
+      "Id": "S3-Console-Auto-Gen-Policy-1645753762707",
+      "Statement": [
+        {
+          "Sid": "S3PolicyStmt-DO-NOT-MODIFY-1645753762508",
+          "Effect": "Allow",
+          "Principal": {
+            "Service": "logging.s3.amazonaws.com"
+          },
+          "Action": "s3:PutObject",
+          "Resource": "${module.accesslog-bucket.s3_bucket_arn}/*"
+        }
+      ]
+    }
+    POLICY
+}
 
 # //KMS設定
 # resource "aws_kms_key" "kms-key" {
