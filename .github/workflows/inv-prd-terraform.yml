@@ -12,9 +12,9 @@ on:
     paths:
     - "environments/prd/**"
 
-# env:
-#   AWS_REGION: ap-northeast-1
-#   AWS_ROLE_ARN: arn:aws:iam::${{ secrets.AWS_ACCOUNT_ID_PRD }}:role/github-actions
+env:
+  AWS_REGION: ap-northeast-1
+  AWS_ROLE_ARN: arn:aws:iam::${{ secrets.AWS_ACCOUNT_ID_PRD }}:role/github-actions
 
 jobs:
   Checkout_to_Plan:
