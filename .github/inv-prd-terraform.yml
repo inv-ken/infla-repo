@@ -1,0 +1,104 @@
+name: Terraform CI/CD
+
+on:
+  push:
+    branches:
+    - main
+    paths:
+    - "environments/prd/**"
+  pull_request:
+    branches:
+    - main
+    paths:
+    - "environments/prd/**"
+
+env:
+  AWS_REGION: ap-northeast-1
+  AWS_ROLE_ARN: arn:aws:iam::${{ secrets.AWS_ACCOUNT_ID_PRD }}:role/github-actions
+
+jobs:
+  Checkout_to_Plan:
+    name: Terraform CI/CD
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        dir: [
+          environments/prd/common,
+          environments/prd/api,
+          environments/prd/portal,
+        ]
+
+    permissions:
+      id-token: write
+      contents: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Configure AWS credentials from IAM Role
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          role-to-assume: ${{ env.AWS_ROLE_ARN }}
+          aws-region: ${{ env.AWS_REGION }}
+      
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v1
+        with:
+          terraform_version: 1.1.4
+
+      - id: format
+        run: terraform fmt -check
+        working-directory: ${{ matrix.dir }}
+        continue-on-error: true
+      
+      - id: initialization
+        run: terraform init
+        working-directory: ${{ matrix.dir }}
+      
+      - id: get
+        run: terraform get
+        working-directory: ${{ matrix.dir }}
+        
+      - id: validation
+        run: terraform validate -no-color
+        working-directory: ${{ matrix.dir }}
+        
+      - id: plan
+        run: terraform plan -no-color
+        working-directory: ${{ matrix.dir }}
+
+      - id: apply
+        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+        run: terraform apply -auto-approve
+        working-directory: ${{ matrix.dir }}
+      
+      - name: Update Pull Request
+        uses: actions/github-script@v5
+        if: github.event_name == 'pull_request'
+        env:
+          PLAN: "terraform\n${{ steps.plan.outputs.stdout }}"
+        with:
+          github-token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+          script: |
+            const output = `#### Terraform Format and Style 🖌\`${{ steps.format.outcome }}\`
+            #### Terraform Initialization ⚙️\`${{ steps.initialization.outcome }}\`
+            #### Terraform Get ⤵️\`${{ steps.get.outcome }}\`
+            #### Terraform Plan 📖\`${{ steps.plan.outcome }}\`
+            #### Terraform Validation 🤖\`${{ steps.validation.outcome }}\`
+
+            <details><summary>Show Plan</summary>
+
+            \`\`\`\n
+            ${process.env.PLAN}
+            \`\`\`
+
+            </details>
+
+            *Pusher: @${{ github.actor }}, Action: \`${{ github.event_name }}\`*`;
+
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: output
+            })
