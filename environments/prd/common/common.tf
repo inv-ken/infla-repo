@@ -216,59 +216,59 @@ module "log-storage-bucket" {
 # }
 
 # アクセスログ用のS3
-# module "accesslog-bucket" {
-#   source = "terraform-aws-modules/s3-bucket/aws"
+module "accesslog-bucket" {
+  source = "terraform-aws-modules/s3-bucket/aws"
 
-#   bucket = "${var.pjname}-${var.envname}-s3-access-log"
-#   acl    = "private"
+  bucket = "${var.pjname}-${var.envname}-s3-access-log"
+  acl    = "private"
 
-#   server_side_encryption_configuration = {
-#     rule = {
-#       apply_server_side_encryption_by_default = {
-#         sse_algorithm = "AES256"
-#       }
-#     }
-#   }
+  server_side_encryption_configuration = {
+    rule = {
+      apply_server_side_encryption_by_default = {
+        sse_algorithm = "AES256"
+      }
+    }
+  }
 
-#   # S3 bucket-level Public Access Block configuration
-#   block_public_acls       = true
-#   block_public_policy     = true
-#   ignore_public_acls      = true
-#   restrict_public_buckets = true
+  # S3 bucket-level Public Access Block configuration
+  block_public_acls       = true
+  block_public_policy     = true
+  ignore_public_acls      = true
+  restrict_public_buckets = true
 
 
 
-#   versioning = {
-#     enabled = true
-#   }
-#   tags = {
-#     "Name"        = "${var.pjname}-${var.envname}-s3-access-log"
-#     "Environment" = var.envname,
-#     "Region"      = "apne1"
-#   }
-#   lifecycle_rule = [
-#     {
-#       abort_incomplete_multipart_upload_days = 0
-#       enabled                                = true
-#       id                                     = "${var.pjname}-${var.envname}-s3-access-log-lifecycle"
-#       tags = {
-#         "Name"        = "${var.pjname}-${var.envname}-s3-access-log-lifecycle"
-#         "Environment" = var.envname,
-#         "Region"      = "apne1"
-#       }
-#       transition = [
-#         {
-#           days          = 30
-#           storage_class = "GLACIER"
-#         }
-#       ]
-#       expiration = {
-#         days                         = 366
-#         expired_object_delete_marker = false
-#       }
-#     }
-#   ]
-# }
+  versioning = {
+    enabled = true
+  }
+  tags = {
+    "Name"        = "${var.pjname}-${var.envname}-s3-access-log"
+    "Environment" = var.envname,
+    "Region"      = "apne1"
+  }
+  lifecycle_rule = [
+    {
+      abort_incomplete_multipart_upload_days = 1
+      enabled                                = true
+      id                                     = "${var.pjname}-${var.envname}-s3-access-log-lifecycle"
+      tags = {
+        "Name"        = "${var.pjname}-${var.envname}-s3-access-log-lifecycle"
+        "Environment" = var.envname,
+        "Region"      = "apne1"
+      }
+      transition = [
+        {
+          days          = 30
+          storage_class = "GLACIER"
+        }
+      ]
+      expiration = {
+        days                         = 366
+        expired_object_delete_marker = false
+      }
+    }
+  ]
+}
 
 # resource "aws_s3_bucket_policy" "accesslog-bucket-policy" {
 #   bucket = module.accesslog-bucket.s3_bucket_id
