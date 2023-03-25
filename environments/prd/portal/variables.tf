@@ -7,7 +7,7 @@ variable "pjname" {
 variable "envname" {
   type        = string
   default     = "prd"
-  description = "環境名。"
+  description = "環境名"
 }
 # variable "portal_certificate_id" {
 #   type        = string

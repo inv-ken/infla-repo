@@ -9,7 +9,7 @@ terraform {
     bucket         = "inv-prd-s3-tfstate"
     key            = "portal.tfstate"
     region         = "ap-northeast-1"
-    dynamodb_table = "mc-prd-dynamodb-tfstate-lock"
+    # dynamodb_table = "mc-prd-dynamodb-tfstate-lock"
   }
 }
 
