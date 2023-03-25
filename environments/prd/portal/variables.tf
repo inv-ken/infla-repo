@@ -1,7 +1,7 @@
 # common
 variable "pjname" {
   type        = string
-  default     = "mc"
+  default     = "inv"
   description = "プロジェクト名"
 }
 variable "envname" {
