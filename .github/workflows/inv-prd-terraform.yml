@@ -12,9 +12,9 @@ on:
     paths:
     - "environments/prd/**"
 
-env:
-  AWS_REGION: ap-northeast-1
-  AWS_ROLE_ARN: arn:aws:iam::${{ secrets.AWS_ACCOUNT_ID_PRD }}:role/github-actions
+# env:
+#   AWS_REGION: ap-northeast-1
+#   AWS_ROLE_ARN: arn:aws:iam::${{ secrets.AWS_ACCOUNT_ID_PRD }}:role/github-actions
 
 jobs:
   Checkout_to_Plan:
@@ -24,8 +24,8 @@ jobs:
       matrix:
         dir: [
           environments/prd/common,
-          environments/prd/api,
-          environments/prd/portal,
+          # environments/prd/api,
+          # environments/prd/portal,
         ]
 
     permissions:
@@ -38,8 +38,8 @@ jobs:
       - name: Configure AWS credentials from IAM Role
         uses: aws-actions/configure-aws-credentials@v1
         with:
-          role-to-assume: ${{ env.AWS_ROLE_ARN }}
-          aws-region: ${{ env.AWS_REGION }}
+          role-to-assume: $env.AWS_ROLE_ARN 
+          aws-region: $env.AWS_REGION
       
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v2.0.2
