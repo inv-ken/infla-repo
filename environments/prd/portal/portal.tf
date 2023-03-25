@@ -76,9 +76,9 @@ resource "aws_cloudfront_distribution" "s3_distribution" {
     max_ttl                = 0
     compress               = true
   }
-  aliases = [
-    "mirasapo-connect.go.jp",
-  ]
+  # aliases = [
+  #   ".jp",
+  # ]
 }
 
 resource "aws_cloudfront_origin_access_identity" "origin_access_identity" {
