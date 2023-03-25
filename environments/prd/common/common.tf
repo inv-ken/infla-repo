@@ -452,7 +452,7 @@ resource "aws_cloudtrail" "cloudtrail" {
 #                 }
 #             }
 #         }
-        
+
 #     ]
 # }
 # POLICY
