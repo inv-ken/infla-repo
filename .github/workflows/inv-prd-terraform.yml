@@ -47,12 +47,12 @@ jobs:
           terraform_version: 1.1.4
 
       - id: format
-        run: terraform fmt -check
+        run: terraform fmt -check >> $GITHUB_OUTPUT
         working-directory: ${{ matrix.dir }}
         continue-on-error: true
       
       - id: initialization
-        run: terraform init
+        run: terraform init >> $GITHUB_OUTPUT
         working-directory: ${{ matrix.dir }}
       
       - id: get
