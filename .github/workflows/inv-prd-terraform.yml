@@ -24,8 +24,8 @@ jobs:
       matrix:
         dir: [
           # environments/prd/common,
-          # environments/prd/api,
-          environments/prd/portal,
+          environments/prd/api,
+          # environments/prd/portal,
         ]
 
     permissions:
