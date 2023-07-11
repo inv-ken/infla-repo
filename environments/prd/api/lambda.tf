@@ -8,6 +8,12 @@ locals {
       # [data.terraform_remote_state.common.outputs.vpc_lambda_sg_id],
       # { "secret_name" = data.terraform_remote_state.db.outputs.rds-proxy-secret-arn },
     ],
+    "sample" = [
+      "sample",
+      # data.terraform_remote_state.common.outputs.private_api_subnets,
+      # [data.terraform_remote_state.common.outputs.vpc_lambda_sg_id],
+      # { "secret_name" = data.terraform_remote_state.db.outputs.rds-proxy-secret-arn },
+    ],
   }
 }
 
